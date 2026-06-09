@@ -32,6 +32,26 @@
     overflow-x: hidden;
   }
 
+  /* ---- Barra de aviso offline (topo, full-width p/ celular) ---- */
+  .offline-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: linear-gradient(135deg, #6a6a8a, #8a6a9a);
+    color: #fff;
+    font-family: 'Baloo 2', 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    padding: 9px 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    transform: translateY(-110%);
+    transition: transform .3s ease;
+  }
+  body.offline .offline-bar { transform: translateY(0); }
+  /* quando offline, desce o botão de operador para não ficar atrás da barra */
+  body.offline .btn-operador { top: 50px; }
+
   /* ---- Enfeites flutuantes (flores, lápis, estrelas) ---- */
   .deco {
     position: fixed;
@@ -306,6 +326,9 @@
 </style>
 </head>
 <body>
+
+  <!-- aviso de modo offline -->
+  <div class="offline-bar" id="offlineBar">📴 Sem internet — modo offline</div>
 
   <!-- enfeites flutuantes -->
   <span class="deco d1">🌸</span>
@@ -603,6 +626,14 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarTodos);
   window.addEventListener('resize', ajustarTodos);
   window.addEventListener('orientationchange', () => setTimeout(ajustarTodos, 200));
+
+  // mostra/esconde o aviso de modo offline
+  function atualizarStatusRede() {
+    document.body.classList.toggle('offline', !navigator.onLine);
+  }
+  window.addEventListener('online', atualizarStatusRede);
+  window.addEventListener('offline', atualizarStatusRede);
+  atualizarStatusRede();
 
   // registra o service worker (faz o site funcionar offline)
   if ('serviceWorker' in navigator) {

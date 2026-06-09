@@ -1,6 +1,6 @@
 // Service worker — faz o site funcionar offline.
 // Mude o número da versão sempre que atualizar os arquivos (força a renovação do cache).
-const CACHE = 'cartinhas-v1';
+const CACHE = 'cartinhas-v2';
 
 // Arquivos do próprio site, guardados já na instalação.
 const CORE = [

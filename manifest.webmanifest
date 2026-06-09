@@ -1,0 +1,19 @@
+{
+  "name": "Sorteador de Cartinhas",
+  "short_name": "Cartinhas",
+  "description": "Sorteie cartinhas de perguntas e respostas. Funciona offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#b8e9ff",
+  "theme_color": "#ff7eb3",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

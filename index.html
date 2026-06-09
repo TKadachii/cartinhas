@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sorteador de Cartinhas</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ff7eb3">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cartinhas">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
@@ -406,7 +412,12 @@
 
   const configurado = FIREBASE_CONFIG.apiKey.indexOf("__") !== 0;
   let db = null;
-  if (configurado) { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.firestore(); }
+  if (configurado) {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    // guarda as cartas no aparelho para funcionar offline
+    db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+  }
 
   // carta de exemplo usada só se o banco estiver vazio ou desconectado
   const cartaExemplo = {
@@ -592,6 +603,13 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarTodos);
   window.addEventListener('resize', ajustarTodos);
   window.addEventListener('orientationchange', () => setTimeout(ajustarTodos, 200));
+
+  // registra o service worker (faz o site funcionar offline)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW falhou:', err));
+    });
+  }
 
   carregarCartas();
 </script>

@@ -419,6 +419,28 @@
   let cartas = [cartaExemplo];
   let atual = 0;
 
+  // ---------- Ajuste automático do tamanho do texto ----------
+  // Diminui a fonte aos poucos até o texto caber inteiro na cartinha.
+  function ajustarFonte(el, maxPx) {
+    const cont = el.parentElement; // .content
+    const min = 9;
+    let size = maxPx;
+    el.style.fontSize = size + 'px';
+    let guard = 0;
+    while (
+      (el.scrollHeight > cont.clientHeight || el.scrollWidth > cont.clientWidth) &&
+      size > min && guard < 100
+    ) {
+      size -= 1;
+      el.style.fontSize = size + 'px';
+      guard++;
+    }
+  }
+  function ajustarTodos() {
+    ajustarFonte(document.getElementById('questionText'), 25);
+    ajustarFonte(document.getElementById('answerText'), 18);
+  }
+
   // ---------- Carrossel ----------
   function mostrar(i) {
     if (cartas.length === 0) return;
@@ -429,6 +451,7 @@
     document.getElementById('backBadge').textContent = c.verso || 'Resposta';
     document.getElementById('answerText').textContent = c.resposta || '';
     document.getElementById('counter').textContent = `Carta ${i + 1} de ${cartas.length}`;
+    ajustarTodos();
   }
   function virar() { document.getElementById('card').classList.toggle('flipped'); }
   function sortear() {
@@ -564,6 +587,11 @@
   document.querySelectorAll('.overlay').forEach(ov => {
     ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
   });
+
+  // reajusta o tamanho do texto quando a fonte carrega e ao girar/redimensionar a tela
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarTodos);
+  window.addEventListener('resize', ajustarTodos);
+  window.addEventListener('orientationchange', () => setTimeout(ajustarTodos, 200));
 
   carregarCartas();
 </script>

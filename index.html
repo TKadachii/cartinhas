@@ -14,7 +14,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 16px 60px;
+    padding: 70px 16px 60px;
     color: #1a1a1a;
   }
 
@@ -34,6 +34,28 @@
     opacity: .95;
   }
 
+  /* ---- Botão operador (canto superior esquerdo) ---- */
+  .btn-operador {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 50;
+    background: rgba(255,255,255,.18);
+    border: 1.5px solid rgba(255,255,255,.6);
+    color: #fff;
+    border-radius: 22px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    transition: background .15s, transform .12s;
+  }
+  .btn-operador:hover { background: rgba(255,255,255,.3); }
+  .btn-operador:active { transform: translateY(1px); }
+
   /* ---- Cartinha ---- */
   .scene {
     width: min(340px, 90vw);
@@ -50,7 +72,6 @@
     transition: transform .7s cubic-bezier(.4,.2,.2,1);
     cursor: pointer;
   }
-
   .card.flipped { transform: rotateY(180deg); }
 
   .face {
@@ -66,13 +87,10 @@
     overflow: hidden;
   }
 
-  /* Frente (azul - pergunta) */
   .front {
     background: linear-gradient(160deg, #d6f0ff 0%, #b9e2ff 100%);
     border: 4px solid #4aa8ff;
   }
-
-  /* Verso (verde - resposta) */
   .back {
     background: linear-gradient(160deg, #e6ffd6 0%, #cdf5b8 100%);
     border: 4px solid #7ad14a;
@@ -102,7 +120,6 @@
     text-align: center;
     overflow-y: auto;
   }
-
   .question {
     font-size: clamp(18px, 5vw, 24px);
     font-weight: bold;
@@ -110,7 +127,6 @@
     color: #0b3c70;
     text-transform: uppercase;
   }
-
   .answer {
     font-size: clamp(13px, 3.6vw, 16px);
     font-weight: bold;
@@ -128,15 +144,14 @@
   .front .hint { color: #0b4a8a; }
   .back .hint  { color: #2f6b14; }
 
-  /* ---- Botões ---- */
+  /* ---- Botões ação ---- */
   .buttons {
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
   }
-
-  button {
+  button.acao {
     border: none;
     border-radius: 30px;
     padding: 14px 28px;
@@ -148,86 +163,204 @@
     transition: transform .12s, box-shadow .12s;
     color: #fff;
   }
-  button:active { transform: translateY(2px); box-shadow: 0 3px 8px rgba(0,0,0,.25); }
-
+  button.acao:active { transform: translateY(2px); box-shadow: 0 3px 8px rgba(0,0,0,.25); }
   .btn-sortear { background: linear-gradient(135deg, #ff7eb3, #ff5e62); }
   .btn-virar   { background: linear-gradient(135deg, #43e97b, #38f9d7); color:#0a3d1f; }
 
-  .counter {
-    color: #fff;
-    margin-top: 18px;
-    font-size: 14px;
-    opacity: .9;
+  .counter { color: #fff; margin-top: 18px; font-size: 14px; opacity: .9; text-align:center; }
+
+  /* ---- Modais ---- */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 14px;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 22px;
+    padding: 26px 22px;
+    width: min(460px, 96vw);
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    margin-top: 30px;
+  }
+  .modal h2 { font-size: 20px; margin-bottom: 6px; color: #2a2a5a; }
+  .modal p.sub { font-size: 13px; color: #666; margin-bottom: 18px; }
+
+  .modal label { display:block; font-size: 13px; font-weight: bold; color:#444; margin: 12px 0 5px; }
+  .modal input, .modal textarea {
+    width: 100%;
+    border: 1.5px solid #ccd;
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #f8f9ff;
+  }
+  .modal textarea { resize: vertical; min-height: 70px; }
+  .modal input:focus, .modal textarea:focus { outline: none; border-color: #6a7bff; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .btn-primary, .btn-ghost {
+    border: none; border-radius: 14px; padding: 12px 20px;
+    font-size: 15px; font-weight: bold; font-family: inherit; cursor: pointer; flex: 1;
+  }
+  .btn-primary { background: linear-gradient(135deg, #6a7bff, #9b5cff); color:#fff; }
+  .btn-ghost { background: #eee; color: #555; }
+
+  .msg { font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .msg.erro { color: #d62; }
+  .msg.ok { color: #1a9e4b; }
+
+  /* lista de cartas no painel admin */
+  .lista-cartas { margin-top: 18px; border-top: 1px solid #eee; padding-top: 14px; }
+  .lista-cartas h3 { font-size: 15px; color:#444; margin-bottom: 10px; }
+  .item-carta {
+    background: #f4f6ff; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+    display: flex; gap: 10px; align-items: flex-start; font-size: 13px;
+  }
+  .item-carta .txt { flex: 1; }
+  .item-carta .txt b { color:#0b3c70; }
+  .item-carta .txt span { color:#2c5414; display:block; margin-top:3px; }
+  .btn-del {
+    background: #ffe0e0; color: #c33; border: none; border-radius: 8px;
+    padding: 6px 10px; font-size: 16px; cursor: pointer; font-weight: bold; line-height: 1;
+  }
+  .config-aviso {
+    background: #fff7e0; border:1px solid #f0d890; color:#8a6d1a;
+    border-radius: 12px; padding: 12px; font-size: 13px; margin-bottom: 14px;
   }
 </style>
 </head>
 <body>
+
+  <button class="btn-operador" onclick="abrirLogin()">🔑 Entrar como operador</button>
 
   <h1>🎴 Sorteador de Cartinhas</h1>
   <p class="subtitle">Toque na carta para virar • Sorteie uma nova a qualquer momento</p>
 
   <div class="scene">
     <div class="card" id="card" onclick="virar()">
-      <!-- Frente: pergunta (azul) -->
       <div class="face front">
         <div class="badge" id="frontBadge"></div>
-        <div class="content">
-          <div class="question" id="questionText"></div>
-        </div>
+        <div class="content"><div class="question" id="questionText"></div></div>
         <div class="hint">👆 toque para ver a resposta</div>
       </div>
-      <!-- Verso: resposta (verde) -->
       <div class="face back">
         <div class="badge" id="backBadge"></div>
-        <div class="content">
-          <div class="answer" id="answerText"></div>
-        </div>
+        <div class="content"><div class="answer" id="answerText"></div></div>
         <div class="hint">👆 toque para voltar</div>
       </div>
     </div>
   </div>
 
   <div class="buttons">
-    <button class="btn-sortear" onclick="sortear()">🔀 Sortear carta</button>
-    <button class="btn-virar" onclick="virar()">🔄 Virar</button>
+    <button class="acao btn-sortear" onclick="sortear()">🔀 Sortear carta</button>
+    <button class="acao btn-virar" onclick="virar()">🔄 Virar</button>
   </div>
-
   <p class="counter" id="counter"></p>
 
-<script>
-  // ====== EDITE AQUI: adicione quantas cartas quiser ======
-  const cartas = [
-    {
-      frente: "Bloco 1 • Identificando os desafios da inclusão escolar",
-      pergunta: "Como dar suporte a alunos com deficiência dentro do espaço escolar?",
-      verso: "Bloco 2 • Identificando os suportes da inclusão escolar",
-      resposta: "O aluno com deficiência precisa de apoio especializado para desenvolver a aprendizagem. A lei prevê currículos abertos e flexíveis, métodos, técnicas e recursos educativos específicos para atender as necessidades dos alunos com deficiência. O estudante também pode precisar de um mediador em sala."
-    },
-    {
-      frente: "Bloco 1 • Pergunta",
-      pergunta: "Escreva sua pergunta aqui",
-      verso: "Bloco 2 • Resposta",
-      resposta: "Escreva sua resposta aqui"
-    }
-  ];
-  // =========================================================
+  <!-- Modal de login -->
+  <div class="overlay" id="loginModal">
+    <div class="modal">
+      <h2>🔑 Entrar como operador</h2>
+      <p class="sub">Acesso restrito para adicionar perguntas e respostas.</p>
+      <label>Login</label>
+      <input id="loginUser" type="text" autocomplete="off" placeholder="login">
+      <label>Senha</label>
+      <input id="loginPass" type="password" placeholder="senha">
+      <div class="msg erro" id="loginMsg"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="fecharLogin()">Cancelar</button>
+        <button class="btn-primary" onclick="fazerLogin()">Entrar</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- Painel admin -->
+  <div class="overlay" id="adminModal">
+    <div class="modal">
+      <h2>🛠️ Painel do operador</h2>
+      <p class="sub">Adicione novas cartas. Elas aparecem para todos os aparelhos.</p>
+
+      <div class="config-aviso" id="configAviso" style="display:none;">
+        ⚠️ O banco de dados ainda não foi conectado. As cartas não serão salvas até configurar o Firebase.
+      </div>
+
+      <label>Cabeçalho da pergunta (azul)</label>
+      <input id="inFrente" type="text" placeholder="Ex.: Bloco 1 • Pergunta">
+      <label>Pergunta</label>
+      <textarea id="inPergunta" placeholder="Digite a pergunta..."></textarea>
+      <label>Cabeçalho da resposta (verde)</label>
+      <input id="inVerso" type="text" placeholder="Ex.: Bloco 2 • Resposta">
+      <label>Resposta</label>
+      <textarea id="inResposta" placeholder="Digite a resposta..."></textarea>
+
+      <div class="msg" id="adminMsg"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="sairAdmin()">Sair</button>
+        <button class="btn-primary" onclick="adicionarCarta()">➕ Adicionar carta</button>
+      </div>
+
+      <div class="lista-cartas">
+        <h3>Cartas atuais (<span id="qtdCartas">0</span>)</h3>
+        <div id="listaCartas"></div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  // ====================================================================
+  // CONFIGURAÇÃO DO FIREBASE  — preenchido automaticamente
+  // ====================================================================
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyC_utKIDtvQOyAtDU9_DWvKcwP0A9eF4mA",
+    authDomain: "cartinhas-b1169.firebaseapp.com",
+    projectId: "cartinhas-b1169",
+    storageBucket: "cartinhas-b1169.firebasestorage.app",
+    messagingSenderId: "984801379302",
+    appId: "1:984801379302:web:0ab970479cc2c819b84c27"
+  };
+  // ====================================================================
+
+  const SENHA_ADMIN = { login: "admin", senha: "27012026" };
+
+  const configurado = FIREBASE_CONFIG.apiKey.indexOf("__") !== 0;
+  let db = null;
+  if (configurado) { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.firestore(); }
+
+  // carta de exemplo usada só se o banco estiver vazio ou desconectado
+  const cartaExemplo = {
+    frente: "Bloco 1 • Identificando os desafios da inclusão escolar",
+    pergunta: "Como dar suporte a alunos com deficiência dentro do espaço escolar?",
+    verso: "Bloco 2 • Identificando os suportes da inclusão escolar",
+    resposta: "O aluno com deficiência precisa de apoio especializado para desenvolver a aprendizagem. A lei prevê currículos abertos e flexíveis, métodos, técnicas e recursos educativos específicos para atender as necessidades dos alunos com deficiência. O estudante também pode precisar de um mediador em sala."
+  };
+
+  let cartas = [cartaExemplo];
   let atual = 0;
 
+  // ---------- Carrossel ----------
   function mostrar(i) {
+    if (cartas.length === 0) return;
     const c = cartas[i];
     document.getElementById('card').classList.remove('flipped');
-    document.getElementById('frontBadge').textContent = c.frente;
-    document.getElementById('questionText').textContent = c.pergunta;
-    document.getElementById('backBadge').textContent = c.verso;
-    document.getElementById('answerText').textContent = c.resposta;
+    document.getElementById('frontBadge').textContent = c.frente || 'Pergunta';
+    document.getElementById('questionText').textContent = c.pergunta || '';
+    document.getElementById('backBadge').textContent = c.verso || 'Resposta';
+    document.getElementById('answerText').textContent = c.resposta || '';
     document.getElementById('counter').textContent = `Carta ${i + 1} de ${cartas.length}`;
   }
-
-  function virar() {
-    document.getElementById('card').classList.toggle('flipped');
-  }
-
+  function virar() { document.getElementById('card').classList.toggle('flipped'); }
   function sortear() {
     if (cartas.length === 0) return;
     let nova;
@@ -237,7 +370,132 @@
     mostrar(atual);
   }
 
-  mostrar(atual);
+  // ---------- Banco de dados ----------
+  async function carregarCartas() {
+    if (!configurado) { cartas = [cartaExemplo]; mostrar(0); return; }
+    try {
+      const snap = await db.collection('cartas').orderBy('createdAt', 'asc').get();
+      const data = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      cartas = data.length ? data : [cartaExemplo];
+    } catch (e) {
+      console.error(e);
+      cartas = [cartaExemplo];
+    }
+    atual = 0;
+    mostrar(0);
+    renderLista();
+  }
+
+  // ---------- Login ----------
+  function abrirLogin() {
+    if (sessionStorage.getItem('operador') === '1') { abrirAdmin(); return; }
+    document.getElementById('loginMsg').textContent = '';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginModal').classList.add('open');
+  }
+  function fecharLogin() { document.getElementById('loginModal').classList.remove('open'); }
+  function fazerLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    if (u === SENHA_ADMIN.login && p === SENHA_ADMIN.senha) {
+      sessionStorage.setItem('operador', '1');
+      fecharLogin();
+      abrirAdmin();
+    } else {
+      document.getElementById('loginMsg').textContent = 'Login ou senha incorretos.';
+    }
+  }
+
+  // ---------- Painel admin ----------
+  function abrirAdmin() {
+    document.getElementById('configAviso').style.display = configurado ? 'none' : 'block';
+    document.getElementById('adminMsg').textContent = '';
+    document.getElementById('adminModal').classList.add('open');
+    renderLista();
+  }
+  function sairAdmin() {
+    sessionStorage.removeItem('operador');
+    document.getElementById('adminModal').classList.remove('open');
+  }
+
+  async function adicionarCarta() {
+    const frente = document.getElementById('inFrente').value.trim() || 'Pergunta';
+    const pergunta = document.getElementById('inPergunta').value.trim();
+    const verso = document.getElementById('inVerso').value.trim() || 'Resposta';
+    const resposta = document.getElementById('inResposta').value.trim();
+    const msg = document.getElementById('adminMsg');
+
+    if (!pergunta || !resposta) {
+      msg.className = 'msg erro';
+      msg.textContent = 'Preencha pelo menos a pergunta e a resposta.';
+      return;
+    }
+    if (!configurado) {
+      msg.className = 'msg erro';
+      msg.textContent = 'Banco não conectado — configure o Firebase primeiro.';
+      return;
+    }
+    msg.className = 'msg';
+    msg.textContent = 'Salvando...';
+    try {
+      await db.collection('cartas').add({
+        frente, pergunta, verso, resposta,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById('inFrente').value = '';
+      document.getElementById('inPergunta').value = '';
+      document.getElementById('inVerso').value = '';
+      document.getElementById('inResposta').value = '';
+      msg.className = 'msg ok';
+      msg.textContent = '✅ Carta adicionada!';
+      await carregarCartas();
+    } catch (e) {
+      msg.className = 'msg erro';
+      msg.textContent = 'Erro ao salvar: ' + (e.message || e);
+    }
+  }
+
+  async function excluirCarta(id) {
+    if (!confirm('Excluir esta carta?')) return;
+    try {
+      await db.collection('cartas').doc(id).delete();
+      await carregarCartas();
+    } catch (e) {
+      alert('Erro ao excluir: ' + (e.message || e));
+    }
+  }
+
+  function renderLista() {
+    const cont = document.getElementById('listaCartas');
+    document.getElementById('qtdCartas').textContent = cartas.length;
+    if (!configurado) { cont.innerHTML = '<p style="font-size:13px;color:#999">Conecte o banco para gerenciar as cartas.</p>'; return; }
+    cont.innerHTML = '';
+    cartas.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'item-carta';
+      const txt = document.createElement('div');
+      txt.className = 'txt';
+      const b = document.createElement('b'); b.textContent = c.pergunta || '';
+      const s = document.createElement('span'); s.textContent = c.resposta || '';
+      txt.appendChild(b); txt.appendChild(s);
+      div.appendChild(txt);
+      if (c.id !== undefined) {
+        const del = document.createElement('button');
+        del.className = 'btn-del'; del.textContent = '🗑️';
+        del.onclick = () => excluirCarta(c.id);
+        div.appendChild(del);
+      }
+      cont.appendChild(div);
+    });
+  }
+
+  // fechar modal clicando fora
+  document.querySelectorAll('.overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+  });
+
+  carregarCartas();
 </script>
 
 </body>
